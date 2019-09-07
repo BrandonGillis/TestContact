@@ -7,7 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 
-class ContactFixtures extends Fixture
+class DepartmentFixtures extends Fixture
 {
     private $manager;
 
