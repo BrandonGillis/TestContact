@@ -1,0 +1,10 @@
+jms_serializer:
+    metadata:
+        debug:                          "%kernel.debug%"
+        directories:
+            FOSRestBundle:
+                namespace_prefix:       "FOS\\RestBundle"
+                path:                   "%kernel.root_dir%/Serializer/FOSRestBundle"
+    default_context:
+        serialization:
+            enable_max_depth_checks:    true
