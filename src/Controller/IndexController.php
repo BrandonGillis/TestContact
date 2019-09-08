@@ -45,7 +45,7 @@ class IndexController extends AbstractController
                 );
 
             // for visualising easily the email content without sending it
-            dd($email->getBody());
+            // dd($email->getBody());
 
             $mailer->send($email);
 
