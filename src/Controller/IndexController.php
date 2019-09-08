@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Form\ContactType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,39 +19,33 @@ class IndexController extends AbstractController
      */
     public function index(Request $request, \Swift_Mailer $mailer)
     {
-        $form = $this->createForm(ContactType::class, null, [
-                    'action' => $this->generateUrl('index'),
-                    'method' => 'POST'
-                ]);
+        $contact = new Contact();
 
+        $form = $this->createForm(ContactType::class, $contact, [
+            'action' => $this->generateUrl('index'),
+            'method' => 'POST'
+            ]);
+            
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($contact);
+            $em->flush();
 
-            $name = $data['name'];
-            $firstname = $data['firstname'];
-            $email = $data['email'];
-            $department = $data['department'];
-            $message = $data['message'];
-
-            $email = (new \Swift_Message('Formulaire contact - ' . $firstname . ' ' . $name))
+            $email = (new \Swift_Message('Formulaire contact - ' . $contact->getName() . ' ' . $contact->getFirstname()))
                 ->setFrom('contact@demo.com')
-                ->setTo($department->getEmail())
+                ->setTo($contact->getDepartment()->getEmail())
                 ->setBody(
                     $this->renderView(
                         'index/email.txt.twig', [
-                            'department' => $department,
-                            'name' => $name,
-                            'firstname' => $firstname,
-                            'email' => $email,
-                            'message' => $message
+                            'contact' => $contact
                         ]),
                     'text/plain'
                 );
 
             // for visualising easily the email content without sending it
-            // dd($email->getBody());
+            dd($email->getBody());
 
             $mailer->send($email);
 

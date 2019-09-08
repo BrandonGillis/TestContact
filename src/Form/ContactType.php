@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Contact;
 use App\Entity\Department;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -10,9 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ContactType extends AbstractType
 {
@@ -21,27 +19,15 @@ class ContactType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom',
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['min' => 3])
-                ]
+                'required' => true
             ])
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['min' => 3])
-                ]
+                'required' => true
             ])
             ->add('email', TextType::class, [
                 'label' => 'Email',
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                    new Email()
-                ]
+                'required' => true
             ])
             ->add('department', EntityType::class, [
                 'label' => 'Département',
@@ -50,16 +36,18 @@ class ContactType extends AbstractType
                 'choice_label' => 'name'
             ])
             ->add('message', TextareaType::class, [
-                'label' => 'Votre message',
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(['min' => 3])
-                ]
+                'label' => 'Message',
+                'required' => true
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer'
             ])
-        ;
+            ;
+    }
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Contact::class,
+        ]);
     }
 }
